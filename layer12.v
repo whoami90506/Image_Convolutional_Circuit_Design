@@ -1,7 +1,7 @@
 module layer12(
 	input clk,
 	input reset,
-	output reg o_busy,
+	output o_busy,
 	output reg o_go_down,
 
 	output reg o_wr,
@@ -13,5 +13,5 @@ module layer12(
 	input [19:0] i_data_0,
 	input [19:0] i_data_1
 );
-
+assign o_busy = 1'b0;
 endmodule

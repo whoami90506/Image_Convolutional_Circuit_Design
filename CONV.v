@@ -25,6 +25,7 @@ module  CONV(
 
 //top
 reg [19:0] i_data;
+reg _ready;
 
 //submodule
 wire valid;
@@ -38,11 +39,16 @@ assign caddr_rd = 12'd0;
 
 
 always @(posedge clk or posedge reset) begin
-	if(reset) i_data <= 20'd0;
-	else i_data <= idata;
+	if(reset) begin 
+		i_data <= 20'd0;
+		_ready <= 1'd0;
+	end else begin
+		i_data <= idata;
+		_ready <= ready;
+	end
 end
 
-layer0 later0(.clk(clk), .reset(reset), .o_busy(busy_layer0), .i_ready(ready), .i_go_down(go_down), 
+layer0 layer0(.clk(clk), .reset(reset), .o_busy(busy_layer0), .i_ready(_ready), .i_go_down(go_down), 
 	.o_addr(iaddr), .i_data(i_data), .o_valid  (valid), .o_data_0 (data_0), .o_data_1 (data_1));
 
 layer12 layer12(.clk(clk), .reset(reset), .o_busy(busy_layer12), .o_go_down(go_down), 
