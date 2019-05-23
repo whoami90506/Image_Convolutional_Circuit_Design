@@ -5,13 +5,14 @@ module subKernal #( parameter [179 :0] weight = 180'h0, parameter [19:0] bias = 
 	input [179:0] i_data,
 	output reg [19:0] o_data
 );
-
+genvar idx;
+integer i;
 //step1
 reg  [179:0] mul;
-wire [359:0] mul_raw;
 wire [179:0] n_mul;
+wire [359:0] mul_raw;
+
 generate
-	genvar idx;
 	for(idx = 0; idx < 9; idx = idx +1) begin
 		assign mul_raw[idx*40 +: 40] = $signed(i_data[idx*20 +: 20]) * $signed(weight[idx*20 +: 20]);
 		assign n_mul[idx*20 +: 20] = mul_raw[idx*40+16 +: 20] + mul_raw[idx*40 +15];

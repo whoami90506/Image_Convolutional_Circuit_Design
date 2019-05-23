@@ -1,17 +1,22 @@
 import sys
 from IPython import embed
 
+def realvalue (num) :
+    return -num +1 if ((num >> 19) & 1) else num
+
 w0 = (int("0A89E", 16), int("092D5", 16), int("06D43", 16), \
       int("01004", 16), int("F8F71", 16), int("F6E54", 16), \
       int("FA6D7", 16), int("FC834", 16), int("FAC19", 16))
 w1 = (int("FDB55", 16), int("02992", 16), int("FC994", 16), \
       int("050FD", 16), int("02F20", 16), int("0202D", 16), \
       int("03BD7", 16), int("FD369", 16), int("05E68", 16))
-weight = (w0, w1)
-bias = (int("01310", 16), int("F7295", 16))
 
-def realvalue (num) :
-    return -1*(num & ((1<<19) -1) ) if ((num >> 19) & 1) else num
+w0 = [realvalue(i) for i in w0]
+w1 = [realvalue(i) for i in w1]
+weight = [w0, w1]
+
+bias = (int("01310", 16), int("F7295", 16))
+bias = [realvalue(i) for i in bias]
 
 def nWaveFormat(nums, size=20) :
     result = str()
@@ -29,16 +34,20 @@ def nWaveFormat(nums, size=20) :
     
     return result[::-1]
 
+def mul_demo (a, b) :
+    print(nWaveFormat([realvalue(int(a, 16)) * realvalue(int(b, 16))], 40))
+
 if __name__ == "__main__":
-    data = [int(sys.argv[i+1], 16) for i in range(9)]
+    data = [realvalue(int(sys.argv[i+1], 16)) for i in range(9)]
 
     for i in [0,1] :
         print("kernal" + str(i))
 
         #step1
-        mul_raw = [realvalue(data[j]) * realvalue(weight[i][j]) for j in range(9)]
+        mul_raw = [data[j] * weight[i][j] for j in range(9)]
         print("mul_raw " + nWaveFormat(mul_raw, 40))
-        mul = [((mul_raw[j] >> 16) & ((1 << 20)-1)) + ((mul_raw[j]  >> 15) & 1 ) for j in range(9)]
+        
+        mul = [realvalue( (num + (1 << 15) ) >> 16) for num in mul_raw]
         print("    mul " + nWaveFormat(mul))
 
         #step2
@@ -56,4 +65,4 @@ if __name__ == "__main__":
 
     
 
-    #embed()
+    embed()
