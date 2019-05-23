@@ -3,7 +3,7 @@ module subKernal #( parameter [179 :0] weight = 180'h0, parameter [39:0] bias = 
 	input reset,
 
 	input [179:0] i_data,
-	output reg [19:0] o_data
+	output reg [18:0] o_data
 );
 genvar idx;
 integer i;
@@ -25,10 +25,11 @@ assign n_middle[ 0+:40] = (mul[160+:40] + mul[200+:40]) + (mul[240+:40] + mul[28
 
 //step3
 wire [39:0] total;
-wire [19:0] reduce, relu;
+wire [19:0] reduce;
+wire [18:0] relu;
 assign total = middle[39:0] + middle[79:40];
 assign reduce = total[16+:20] + total[15];
-assign relu = reduce[19] ? 20'd0 : reduce;
+assign relu = reduce[19] ? 19'd0 : reduce[18:0];
 
 always @(posedge clk, posedge reset) begin
 	if(reset) begin
@@ -51,8 +52,8 @@ module kernal (
 	input [179:0] i_data,
 
 	output o_valid,
-	output [19:0] o_data_0,
-	output [19:0] o_data_1
+	output [18:0] o_data_0,
+	output [18:0] o_data_1
 );
 
 reg [2:0] valid;

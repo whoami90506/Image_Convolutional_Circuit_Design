@@ -11,8 +11,8 @@ module layer0(
 	input [19:0] i_data,
 
 	output o_valid,
-	output [19:0] o_data_0,
-	output [19:0] o_data_1
+	output [18:0] o_data_0,
+	output [18:0] o_data_1
 );
 
 integer i;

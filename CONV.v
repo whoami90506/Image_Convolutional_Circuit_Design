@@ -29,7 +29,7 @@ reg _ready;
 
 //submodule
 wire valid;
-wire [19:0] data_0, data_1;
+wire [18:0] data_0, data_1;
 wire busy_layer0, busy_layer12;
 wire go_down;
 
