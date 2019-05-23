@@ -84,7 +84,8 @@ endtask
 
 function [11:0] nxt_init_addr;
 	input [11:0] addr;
-	nxt_init_addr = addr[6] ? {6'd0,addr[5:0]+ 6'd1} : {6'd1, addr[5:0]};
+	nxt_init_addr = (addr >= 12'd127) ? addr + 12'd1 :
+				 	addr[6] ? {6'd0,addr[5:0]+ 6'd1} : {6'd1, addr[5:0]};
 endfunction
 
 always @(*) begin
@@ -97,7 +98,6 @@ always @(*) begin
 	case (state)
 		IDLE : begin
 			n_o_busy = i_ready;
-
 			if(i_ready) n_state = INIT;
 		end
 
@@ -106,10 +106,54 @@ always @(*) begin
 			n_o_addr = nxt_init_addr(o_addr);
 			if(data_addr[6] && data_addr != 7'd64) kernal_normal(data_addr[5:0] - 6'd1);
 
-			if(o_addr == 12'd127) begin
+			if(data_addr == 12'd127) begin
 				n_state = RUN1_BUF;
-				n_o_addr = 12'd128;
 			end
+		end
+
+		RUN1_BUF : begin
+			n_state = RUN2;
+			for(i = 0; i < 64; i = i+1) begin
+				n_mem[i] = mem[64 + i];
+				n_mem[64 + i] = mem[128 + i];
+				n_mem[128 + i] = i ? 20'd0 : i_data;
+			end
+			n_o_addr = o_addr + 12'd1;
+			kernal_normal(63);
+
+			//last
+			if(data_addr == 12'hFFF) begin
+				n_state = LAST;
+				n_mem[128] = 20'd0;
+			end
+		end
+
+		RUN2 : begin
+			n_mem[128 + data_addr[5:0]] = i_data;
+			kernal_normal(data_addr[5:0] - 12'd1);
+			n_o_addr = o_addr + 12'd1;
+
+			//last
+			if(data_addr[5:0] == 6'd63) n_state = RUN2_BUF;
+		end
+
+		RUN2_BUF : begin
+			n_state = WAIT;
+			for(i = 0; i < 64; i = i+1) begin
+				n_mem[i] = mem[64 + i];
+				n_mem[64 + i] = mem[128 + i];
+				n_mem[128 + i] = i ? 20'd0 : i_data;
+			end
+			n_o_addr = o_addr + 12'd1;
+			kernal_normal(63);
+		end
+
+		WAIT : begin
+			if(i_go_down) begin
+				n_state = RUN1;
+				n_o_addr = o_addr + 12'd1;
+			end
+			n_o_busy = 1'd0;
 		end
 	endcase
 end
