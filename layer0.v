@@ -11,8 +11,7 @@ module layer0(
 	input [19:0] i_data,
 
 	output o_valid,
-	output [18:0] o_data_0,
-	output [18:0] o_data_1
+	output [18:0] o_data,
 );
 
 integer i;
@@ -40,6 +39,7 @@ reg [6:0]  data_addr;
 //kernal
 reg [179:0] k_element, n_k_element;
 reg k_valid, n_k_valid;
+reg k_sel, n_k_sel
 
 task kernal_nop;
 	begin
@@ -171,6 +171,7 @@ always @(posedge clk, posedge reset) begin
 		//kernal
 		k_element <= 180'd0;
 		k_valid <= 1'd0;
+		k_sel <= 1'd0;
 	end else begin
 		//control
 		state <= n_state;
@@ -183,10 +184,11 @@ always @(posedge clk, posedge reset) begin
 		//kernal
 		k_element <= n_k_element;
 		k_valid <= n_k_valid;
+		k_sel <= n_k_sel;
 	end
 end
 
 kernal kernal (.clk(clk), .reset(reset), .i_valid(k_valid), .i_data(k_element), 
-	.o_valid(o_valid), .o_data_0(o_data_0), .o_data_1(o_data_1));
+	.o_valid(o_valid), .o_data(o_data), .i_sel(k_sel));
 
 endmodule
