@@ -23,18 +23,16 @@ reg [11:0] n_o_addr;
 //control
 localparam IDLE = 3'd0;
 localparam INIT = 3'd1;
-localparam RUN1_BUF = 3'd2;
-localparam RUN2 = 3'd3;
-localparam RUN2_BUF = 3'd4;
-localparam WAIT = 3'd5;
-localparam RUN1 = 3'd6;
-localparam LAST = 3'd7;
+localparam  OUT = 3'd2;
+localparam WAIT = 3'd3;
+localparam  RUN = 3'd4;
+localparam LAST = 3'd5;
 reg [2:0] state, n_state;
 
 //men
-reg [19:0] mem [0:191];
-reg [19:0] n_mem [0:191];
-reg [6:0]  data_addr;
+reg [19:0]   mem [0:255];
+reg [19:0] n_mem [0:255];
+reg [ 7:0] data_addr;
 
 //kernal
 reg [179:0] k_element, n_k_element;
@@ -45,6 +43,7 @@ task kernal_nop;
 	begin
 		n_k_element = k_element;
 		n_k_valid = 1'd0;
+		n_k_sel = k_sel;
 	end
 endtask
 
@@ -62,23 +61,7 @@ task kernal_normal;
 		n_k_element[  0 +: 20] = (~pos) ? i_data : 20'd0;
 
 		n_k_valid = 1'd1;
-	end
-endtask
-
-task kernal_last;
-	input [5:0] pos;
-	begin
-		n_k_element[160 +: 20] = pos    ? mem[{2'b00, pos} - 7'd1] : 20'd0; //0
-		n_k_element[140 +: 20] = mem[pos];                                 //1
-		n_k_element[120 +: 20] = (~pos) ? mem[{2'b00, pos} + 7'd1] : 20'd0; //2
-		n_k_element[100 +: 20] = pos    ? mem[{2'b01, pos} - 7'd1] : 20'd0;//3
-		n_k_element[ 80 +: 20] = mem[{2'b01, pos}];//4
-		n_k_element[ 60 +: 20] = (~pos) ? mem[{2'b01, pos} + 7'd1] : 20'd0;
-		n_k_element[ 40 +: 20] = 20'd0;
-		n_k_element[ 20 +: 20] = 20'd0;
-		n_k_element[  0 +: 20] = 20'd0;
-
-		n_k_valid = 1'd1;
+		n_k_sel = ~k_sel;
 	end
 endtask
 
@@ -175,7 +158,7 @@ always @(posedge clk, posedge reset) begin
 	end else begin
 		//control
 		state <= n_state;
-		data_addr <= o_addr[6:0];
+		data_addr <= o_addr[7:0];
 		//IO
 		o_busy <= n_o_busy;
 		o_addr <= n_o_addr;
