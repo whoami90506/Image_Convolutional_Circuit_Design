@@ -7,7 +7,7 @@ module kernal (
 	input i_sel,
 
 	output o_valid,
-	output [18:0] o_data
+	output reg [18:0] o_data
 );
 
 parameter [179:0] weight_0 = 180'h0A89E_092D5_06D43_01004_F8F71_F6E54_FA6D7_FC834_FAC19;
@@ -65,7 +65,6 @@ always @(posedge clk, posedge reset) begin
 		middle <= n_middle;
 		o_data <= relu;
 		valid <= n_valid;
-		sel_mid <= i_sel;
 		bias <= n_bias;
 	end
 end

@@ -29,7 +29,7 @@ reg _ready;
 
 //submodule
 wire valid;
-wire [18:0] data_0, data_1;
+wire [18:0] data;
 wire busy_layer0, busy_layer12;
 wire go_down;
 
@@ -48,11 +48,11 @@ always @(posedge clk or posedge reset) begin
 	end
 end
 
-layer0 layer0(.clk(clk), .reset(reset), .o_busy(busy_layer0), .i_ready(_ready), .i_go_down(go_down), 
-	.o_addr(iaddr), .i_data(i_data), .o_valid  (valid), .o_data_0 (data_0), .o_data_1 (data_1));
+layer0 layer0(.clk(clk), .reset(reset), .o_busy(busy_layer0), .i_ready(_ready), .o_addr(iaddr), 
+	.i_data(i_data), .o_valid  (valid), .o_data (data));
 
-layer12 layer12(.clk(clk), .reset(reset), .o_busy(busy_layer12), .o_go_down(go_down), 
-	.o_wr(cwr), .o_addr(caddr_wr), .o_data(cdata_wr), .o_sel(csel), .i_valid(valid), .i_data_0(data_0), .i_data_1(data_1));
+layer12 layer12(.clk(clk), .reset(reset), .o_busy(busy_layer12), .o_wr(cwr), .o_addr(caddr_wr), 
+	.o_data(cdata_wr), .o_sel(csel), .i_valid(valid), .i_data(data));
 
 endmodule
 
