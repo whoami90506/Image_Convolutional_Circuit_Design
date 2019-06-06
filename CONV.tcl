@@ -25,7 +25,7 @@ define_name_rules name_rule -map {{"\\*cell\\*" "cell"}}
 define_name_rules name_rule -case_insensitive
 change_names -hierarchy -rules name_rule
 write -format verilog -hierarchy -output "syn/CONV_syn.v"
-write_sdf -version 1.0 -context verilog -load_delay net syn/lcd_ctrl_syn.sdf
+write_sdf -version 1.0 -context verilog -load_delay net syn/CONV_syn.sdf
 report_timing > syn/timing.report
 report_area > syn/area.report
 report_power > syn/power.report
