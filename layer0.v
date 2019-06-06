@@ -44,7 +44,7 @@ reg k_sel, n_k_sel;
 
 task kernal_nop;
 	begin
-		n_k_element = 180'dx;
+		n_k_element = k_element;
 		n_k_valid = 1'd0;
 		n_k_sel = k_sel;
 	end
@@ -84,8 +84,8 @@ endfunction
 function [11:0] nxt_addr;
 	input [11:0] addr;
 	begin
-		if(addr[7:0] == 8'd63)nxt_addr = addr + 12'd1;
-		else nxt_addr = addr[7] ? addr + 12'd64 : addr - 12'd63;
+		if(addr[6:0] == 7'd63)nxt_addr = addr + 12'd1;
+		else nxt_addr = addr[6] ? addr + 12'd64 : addr - 12'd63;
 	end
 endfunction
 
@@ -158,7 +158,7 @@ always @(*) begin
 		end
 
 		LAST_RUN : begin
-			n_state = (o_addr[6:0] == 7'd63) ? WAIT : LAST_RUN;
+			n_state = (o_addr[5:0] == 6'd63) ? WAIT : LAST_RUN;
 
 			n_o_addr = o_addr + 12'd1;
 			n_mem[{2'b10, data_addr[5:0]}] = i_data;

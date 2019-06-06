@@ -65,7 +65,15 @@ always @(*) begin
 		n_o_wr = 1'b1;
 
 		if(step_counter[3]) begin
+			//4'b1000 : layer1 max0
+			//4'b1001 : layer1 max1
+			//4'b1010 : layer2 max0
+			//4'b1011 : layer2 max1
+			n_o_addr = step_counter[1] ? {1'b0, addr_counter, step_counter[0]} : {2'b0, addr_counter};
+			n_o_data = step_counter[0] ? max_1 : max_0;
+			n_o_sel  = step_counter[1] ? 3'b101 : {step_counter[0], ~step_counter[0], ~step_counter[0]};
 		end else begin
+			n_o_addr = {addr_counter[9:5], step_counter[1], addr_counter[4:0], step_counter[2]};
 			n_o_data = i_data;
 			n_o_sel  = {1'b0, step_counter[0], ~step_counter[0]}; 
 		end
@@ -85,9 +93,9 @@ always @(posedge clk or posedge reset) begin
 		addr_counter <= 10'd0;
 		//output
 		o_wr <= 1'd0;
-		n_o_addr <= 12'd0;
-		n_o_data <= 20'd0;
-		n_o_sel <= 3'd0;
+		o_addr <= 12'd0;
+		o_data <= 20'd0;
+		o_sel <= 3'd0;
 		//mem
 		for(i = 0; i < 6; i = i+1)mem[i] <= 19'd0;
 		max_0 <= 19'd0;
@@ -99,9 +107,9 @@ always @(posedge clk or posedge reset) begin
 		addr_counter <= n_addr_counter;
 		//output
 		o_wr <= n_o_wr;
-		n_o_addr <= n_o_addr;
-		n_o_data <= n_o_data;
-		n_o_sel <= n_o_sel;
+		o_addr <= n_o_addr;
+		o_data <= n_o_data;
+		o_sel <= n_o_sel;
 		//mem
 		for(i = 0; i < 6; i = i+1)mem[i] <= n_mem[i];
 		max_0 <= n_max_0;
