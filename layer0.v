@@ -122,14 +122,22 @@ always @(*) begin
 
 		WAIT : begin
 			n_state = WAIT;
-			n_mem[255] = (data_addr[5:0] == 6'd63) ? i_data : mem[255];
 
-			if(conv_counter == 5'd31 && step_counter == 4'd6) begin
-				n_state  = (o_addr == 12'd4032) ? LAST_SHIFT : 
-							o_addr ? SHIFT : IDLE;
-				n_o_addr = (o_addr == 12'd4032) ? 12'd4033   :
-							o_addr ? nxt_addr(o_addr) : 12'd0;
-			end
+			if(o_addr) begin
+				n_mem[255] = (data_addr[5:0] == 6'd63) ? i_data : mem[255];
+				
+				if(conv_counter == 5'd31 && step_counter == 4'd6) begin
+					n_state  = (o_addr == 12'd4032) ? LAST_SHIFT : SHIFT; 
+					n_o_addr = (o_addr == 12'd4032) ? 12'd4033   : nxt_addr(o_addr);
+				end
+			end else begin
+				n_mem[191] = (data_addr[5:0] == 6'd63) ? i_data : mem[191];
+
+				if(conv_counter == 5'd31 && step_counter == 4'd7) begin
+					n_state  = IDLE; 
+					n_o_addr = 12'd0;
+				end
+			end 
 		end
 
 		SHIFT : begin
