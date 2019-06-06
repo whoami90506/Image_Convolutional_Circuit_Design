@@ -122,11 +122,13 @@ always @(*) begin
 
 		WAIT : begin
 			n_state = WAIT;
-			n_mem[255] = i_data;
+			n_mem[255] = (data_addr[5:0] == 6'd63) ? i_data : mem[255];
 
-			if(conv_counter == 5'd31 && step_counter == 4'd7) begin
-				n_state  = (o_addr == 12'd4032) ? LAST_SHIFT : SHIFT;
-				n_o_addr = (o_addr == 12'd4032) ? 12'd4033   : nxt_addr(o_addr);
+			if(conv_counter == 5'd31 && step_counter == 4'd6) begin
+				n_state  = (o_addr == 12'd4032) ? LAST_SHIFT : 
+							o_addr ? SHIFT : IDLE;
+				n_o_addr = (o_addr == 12'd4032) ? 12'd4033   :
+							o_addr ? nxt_addr(o_addr) : 12'd0;
 			end
 		end
 
@@ -137,6 +139,29 @@ always @(*) begin
 			for(i =   0; i < 128; i = i+1)n_mem[i] = mem[i+128];
 			n_mem[128] = i_data;
 			for(i = 129; i < 256; i = i+1)n_mem[i] = 20'd0;
+		end
+
+		RUN : begin
+			n_state = (o_addr[6:0] == 7'd63) ? WAIT : RUN;
+
+			n_o_addr = nxt_addr(o_addr);
+			n_mem[{1'b1, ~data_addr[6], data_addr[5:0]}] = i_data;
+		end
+
+		LAST_SHIFT : begin
+			n_state = LAST_RUN;
+
+			n_o_addr = 12'd4034;
+			for(i =   0; i < 128; i = i+1)n_mem[i] = mem[i+128];
+			n_mem[128] = i_data;
+			for(i = 129; i < 256; i = i+1)n_mem[i] = 20'd0;
+		end
+
+		LAST_RUN : begin
+			n_state = (o_addr[6:0] == 7'd63) ? WAIT : LAST_RUN;
+
+			n_o_addr = o_addr + 12'd1;
+			n_mem[{2'b10, data_addr[5:0]}] = i_data;
 		end
 		
 	endcase
@@ -161,7 +186,7 @@ always @(*) begin
 	endcase
 end
 
-always @(posedge clk, posedge reset) begin
+always @(posedge clk or posedge reset) begin
 	if(reset) begin
 		//control
 		state <= IDLE;
