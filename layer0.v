@@ -122,7 +122,8 @@ always @(*) begin
 
 		WAIT : begin
 			n_state = WAIT;
-			n_mem[255] = (data_addr[5:0] == 6'd63) ? i_data : mem[255];
+			if(o_addr) n_mem[255] = (data_addr[5:0] == 6'd63) ? i_data : mem[255];
+			else n_mem[191] = (data_addr[5:0] == 6'd63) ? i_data : mem[191];
 
 			if(conv_counter == 5'd31 && step_counter == 4'd6) begin
 				n_state  = (o_addr == 12'd4032) ? LAST_SHIFT : 
