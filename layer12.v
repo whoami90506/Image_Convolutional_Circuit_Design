@@ -49,7 +49,7 @@ endgenerate
 //control
 always @(*) begin
 	if(o_busy) begin
-		n_o_busy = (step_counter == 4'd11 && addr_counter == 10'd1023) ? 1'b0 : 1'b1;
+		n_o_busy = (step_counter == 4'd0 && addr_counter == 10'd0) ? 1'b0 : 1'b1;
 		n_step_counter = (step_counter == 4'd11) ? 4'd0 : step_counter + 4'd1;
 		n_addr_counter = (step_counter == 4'd11) ? addr_counter + 10'd1 : addr_counter;
 	end else begin
@@ -70,11 +70,11 @@ always @(*) begin
 			//4'b1010 : layer2 max0
 			//4'b1011 : layer2 max1
 			n_o_addr = step_counter[1] ? {1'b0, addr_counter, step_counter[0]} : {2'b0, addr_counter};
-			n_o_data = step_counter[0] ? max_1 : max_0;
+			n_o_data = step_counter[0] ? {1'b0,max_1} : {1'b0, max_0};
 			n_o_sel  = step_counter[1] ? 3'b101 : {step_counter[0], ~step_counter[0], ~step_counter[0]};
 		end else begin
 			n_o_addr = {addr_counter[9:5], step_counter[1], addr_counter[4:0], step_counter[2]};
-			n_o_data = i_data;
+			n_o_data = {1'b0, i_data};
 			n_o_sel  = {1'b0, step_counter[0], ~step_counter[0]}; 
 		end
 	end else begin
