@@ -35,8 +35,8 @@ generate
 	for(idx = 0; idx < 9; idx = idx +1) begin
 		assign mul_raw_0[idx*40 +: 40] = $signed(i_data[idx*20 +: 20]) * $signed(weight_0[idx*20 +: 20]);
 		assign mul_raw_1[idx*40 +: 40] = $signed(i_data[idx*20 +: 20]) * $signed(weight_1[idx*20 +: 20]);
-		assign n_mul = i_sel ? mul_raw_1 : mul_raw_0;
 	end
+	assign n_mul = i_sel ? mul_raw_1 : mul_raw_0;
 endgenerate
 
 //step2

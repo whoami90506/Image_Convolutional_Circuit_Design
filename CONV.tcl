@@ -1,9 +1,12 @@
 #Import design
 read_file -format verilog "./CONV.v"
+current_design [get_designs CONV]
+link
 source -echo -verbose ./CONV.sdc
-set high_fanout_net_threshold 0
 
 #compile design
+current_design [get_designs CONV]
+set high_fanout_net_threshold 0
 uniquify
 set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
 check_design
