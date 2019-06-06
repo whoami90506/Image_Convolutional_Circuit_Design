@@ -31,7 +31,6 @@ reg _ready;
 wire valid;
 wire [18:0] data;
 wire busy_layer0, busy_layer12;
-wire go_down;
 
 assign busy = busy_layer0 | busy_layer12;
 assign crd = 1'd0;
