@@ -57,7 +57,6 @@ module kernal (
 
 	input i_valid,
 	input [179:0] i_data,
-	input i_sel,
 
 	output o_valid,
 	output reg [18:0] o_data
@@ -71,25 +70,31 @@ parameter [39:0]    bias_1 = 40'hF_F7295_0000;
 //control
 reg [2:0] valid;
 wire [2:0] n_valid;
+reg sel;
+wire n_sel;
 assign o_valid = valid[2];
 assign n_valid = {valid[1:0], i_valid};
+assign n_sel = i_valid ? ~sel : sel;
 
 genvar idx;
 integer i;
+//step0
+reg [179:0] weight, n_weight;
+always @(*) begin
+	if(i_valid) n_weight = sel ? weight_0 : weight_1;
+	else n_weight = weight;
+end
 //step1
 reg  [39:0] bias;
 wire [39:0] n_bias;
 reg  [359:0] mul;
 wire [359:0] n_mul;
-wire [359:0] mul_raw_0, mul_raw_1;
 
-assign n_bias = i_sel ? bias_1 : bias_0;
+assign n_bias = sel ? bias_1 : bias_0;
 generate
 	for(idx = 0; idx < 9; idx = idx +1) begin
-		assign mul_raw_0[idx*40 +: 40] = $signed(i_data[idx*20 +: 20]) * $signed(weight_0[idx*20 +: 20]);
-		assign mul_raw_1[idx*40 +: 40] = $signed(i_data[idx*20 +: 20]) * $signed(weight_1[idx*20 +: 20]);
+		assign n_mul[idx*40 +: 40] = $signed(i_data[idx*20 +: 20]) * $signed(weight[idx*20 +: 20]);
 	end
-	assign n_mul = i_sel ? mul_raw_1 : mul_raw_0;
 endgenerate
 
 //step2
@@ -106,14 +111,18 @@ assign total = middle[39:0] + middle[79:40];
 assign reduce = total[16+:20] + total[15];
 assign relu = reduce[19] ? 19'd0 : reduce[18:0];
 
-always @(posedge clk or posedge reset) begin
+always @(posedge clk, posedge reset) begin
 	if(reset) begin
+		sel <= 1'b0;
+		weight <= weight_0;
 		mul <= 360'd0;
 		middle <= 80'd0;
 		o_data <= 20'd0;
 		valid <= 3'd0;
 		bias <= bias_0;
 	end else begin
+		sel <= n_sel;
+		weight <= n_weight;
 		mul <= n_mul;
 		middle <= n_middle;
 		o_data <= relu;
@@ -163,13 +172,11 @@ reg [ 7:0] data_addr;
 //kernal
 reg [179:0] k_element, n_k_element;
 reg k_valid, n_k_valid;
-reg k_sel, n_k_sel;
 
 task kernal_nop;
 	begin
 		n_k_element = k_element;
 		n_k_valid = 1'd0;
-		n_k_sel = k_sel;
 	end
 endtask
 
@@ -187,7 +194,6 @@ task kernal_normal;
 		n_k_element[  0 +: 20] = (~pos[5:0]) ? mem[{1'b1, pos} + 8'd1 ] : 20'd0;
 
 		n_k_valid = 1'd1;
-		n_k_sel = ~k_sel;
 	end
 endtask
 
@@ -332,7 +338,6 @@ always @(posedge clk or posedge reset) begin
 		//kernal
 		k_element <= 180'd0;
 		k_valid <= 1'd0;
-		k_sel <= 1'd1;
 	end else begin
 		//control
 		state <= n_state;
@@ -347,12 +352,11 @@ always @(posedge clk or posedge reset) begin
 		//kernal
 		k_element <= n_k_element;
 		k_valid <= n_k_valid;
-		k_sel <= n_k_sel;
 	end
 end
 
 kernal kernal (.clk(clk), .reset(reset), .i_valid(k_valid), .i_data(k_element), 
-	.o_valid(o_valid), .o_data(o_data), .i_sel(k_sel));
+	.o_valid(o_valid), .o_data(o_data));
 
 endmodule
 
