@@ -106,7 +106,7 @@ assign total = middle[39:0] + middle[79:40];
 assign reduce = total[16+:20] + total[15];
 assign relu = reduce[19] ? 19'd0 : reduce[18:0];
 
-always @(posedge clk, posedge reset) begin
+always @(posedge clk or posedge reset) begin
 	if(reset) begin
 		mul <= 360'd0;
 		middle <= 80'd0;
