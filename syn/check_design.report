@@ -1,0 +1,86 @@
+ 
+****************************************
+check_design summary:
+Version:     N-2017.09-SP2
+Date:        Sat Jun  8 03:01:09 2019
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                     45
+    Unconnected ports (LINT-28)                                    20
+    Shorted outputs (LINT-31)                                      12
+    Constant outputs (LINT-52)                                     13
+
+Cells                                                              22
+    Cells do not drive (LINT-1)                                    22
+--------------------------------------------------------------------------------
+
+Warning: In design 'layer0', cell 'C64354' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64356' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64568' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64570' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64792' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64793' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64794' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64805' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64806' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64807' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64814' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64815' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C64816' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'B_1386' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C65016' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C65019' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C65025' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C65028' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C65041' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C65044' does not drive any nets. (LINT-1)
+Warning: In design 'layer12', cell 'C1109' does not drive any nets. (LINT-1)
+Warning: In design 'layer12', cell 'C1112' does not drive any nets. (LINT-1)
+Warning: In design 'CONV', port 'cdata_rd[19]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[18]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[17]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[16]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', port 'cdata_rd[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[0]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[1]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[2]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[3]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[4]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[5]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[6]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[7]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[8]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[9]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[10]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to output port 'caddr_rd[11]'. (LINT-31)
+Warning: In design 'CONV', output port 'crd' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[11]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[10]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[9]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[8]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[7]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[6]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[5]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[4]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[3]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[2]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[1]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CONV', output port 'caddr_rd[0]' is connected directly to 'logic 0'. (LINT-52)
+1

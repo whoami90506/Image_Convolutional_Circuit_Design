@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
-`define CYCLE      3.0          	  // Modify your clock period here
-`define End_CYCLE  100000000              // Modify cycle times once your design need more cycle times!
+`define CYCLE      2.37         	  // Modify your clock period here
+`define End_CYCLE  13000              // Modify cycle times once your design need more cycle times!
 
 `define PAT        "./dat_grad/cnn_sti.dat"                 // Modify your "dat" directory path
 `define L0_EXP0        "./dat_grad/cnn_layer0_exp0.dat"     
@@ -248,7 +248,7 @@ end
 
 //-------------------------------------------------------------------------------------------------------------------
 initial  begin
- #`End_CYCLE ;
+ #(`End_CYCLE * `CYCLE) ;
  	$display("-----------------------------------------------------\n");
  	$display("Error!!! The simulation can't be terminated under normal operation!\n");
  	$display("-------------------------FAIL------------------------\n");
