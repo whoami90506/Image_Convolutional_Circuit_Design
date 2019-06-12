@@ -156,9 +156,10 @@ reg [3:0] step_counter, n_step_counter;
 reg [4:0] conv_counter, n_conv_counter;
 
 //men
-reg [19:0]   mem [0:255];
-reg [19:0] n_mem [0:255];
-reg [ 7:0] data_addr;
+reg [19:0]   mem [0:127];
+reg [19:0] n_mem [0:127];
+reg [19:0]   box [0:  7];
+reg [19:0] n_box [0:  7];
 
 //kernal
 reg [179:0] k_element, n_k_element;
@@ -176,46 +177,73 @@ endtask
 task kernal_normal;
 	input [6:0] pos;
 	begin
-		n_k_element[160 +: 20] =   pos[5:0]  ? mem[{1'b0, pos} - 8'd1 ] : 20'd0; //0
-		n_k_element[140 +: 20] =               mem[       pos         ];         //1
-		n_k_element[120 +: 20] = (~pos[5:0]) ? mem[{1'b0, pos} + 8'd1 ] : 20'd0; //2
-		n_k_element[100 +: 20] =   pos[5:0]  ? mem[{1'b0, pos} + 8'd63] : 20'd0;//3
-		n_k_element[ 80 +: 20] =               mem[{1'b0, pos} + 8'd64];//4
-		n_k_element[ 60 +: 20] = (~pos[5:0]) ? mem[{1'b0, pos} + 8'd65] : 20'd0;
-		n_k_element[ 40 +: 20] =   pos[5:0]  ? mem[{1'b1, pos} - 8'd1 ] : 20'd0;
-		n_k_element[ 20 +: 20] =               mem[{1'b1, pos}        ];
-		n_k_element[  0 +: 20] = (~pos[5:0]) ? mem[{1'b1, pos} + 8'd1 ] : 20'd0;
+		n_k_element[160 +: 20] =   pos[5:0]  ? mem[pos - 8'd1 ] : 20'd0; //0
+		n_k_element[140 +: 20] =               mem[pos        ];         //1
+		n_k_element[120 +: 20] = (~pos[5:0]) ? mem[pos + 8'd1 ] : 20'd0; //2
+
+		if(pos[6]) begin
+			n_k_element[100 +: 20] =   box[0];
+			n_k_element[ 80 +: 20] =   box[1];
+			n_k_element[ 60 +: 20] =   box[2];
+			n_k_element[ 40 +: 20] =   box[4];
+			n_k_element[ 20 +: 20] =   box[5];
+			n_k_element[  0 +: 20] =   box[6];
+		end else begin
+			n_k_element[100 +: 20] =   pos[5:0]  ? mem[{1'b1, pos[5:0]} - 8'd1] : 20'd0; //3
+			n_k_element[ 80 +: 20] =               mem[{1'b1, pos[5:0]}       ];         //4
+			n_k_element[ 60 +: 20] = (~pos[5:0]) ? mem[{1'b1, pos[5:0]} + 8'd1] : 20'd0; //5
+			n_k_element[ 40 +: 20] =   box[0];
+			n_k_element[ 20 +: 20] =   box[1];
+			n_k_element[  0 +: 20] =   box[2];
+		end
 
 		n_k_valid = 1'd1;
 		n_k_sel = ~k_sel;
 	end
 endtask
 
-function [11:0] nxt_init_addr;
-	input [11:0] addr;
+task box_shift;
 	begin
-		if(addr[5:0] < 6'd2) begin //first left
-			if(addr == 12'd129)nxt_init_addr = 12'd2;
-			else nxt_init_addr = addr[0] ? {addr[11:1], 1'b0} + 12'd64 : addr + 12'd1;
-		end else begin
-			if(addr >= 12'd191)nxt_init_addr = 12'd192;
-			else nxt_init_addr = addr[7] ? {addr[11:8], 2'd0, addr[5:0] + 6'd1} : addr + 12'd64;
+		n_box[0] = box[1];
+		n_box[1] = box[2];
+		n_box[2] = box[3];
+		n_box[4] = box[5];
+		n_box[5] = box[6];
+		n_box[6] = box[7];
+		n_box[3] = 20'd0;
+		n_box[7] = 20'd0;
+
+		if(!(conv_counter == 5'd0 && step_counter[2] == 1'b0) ) begin
+			n_mem[{1'b0, conv_counter - {4'd0, (~step_counter[2])}, ~step_counter[2]}] = box[0];
+			n_mem[{1'b1, conv_counter - {4'd0, (~step_counter[2])}, ~step_counter[2]}] = box[4];
 		end
 	end
-endfunction
+endtask
 
-function [11:0] nxt_addr;
-	input [11:0] addr;
+task box_change;
+	input [19:0] data;
 	begin
-		if(addr[6:0] == 7'd63)nxt_addr = addr + 12'd1;
-		else nxt_addr = addr[6] ? addr + 12'd64 : addr - 12'd63;
+		n_box[0] = 20'd0;
+		n_box[1] = data;
+		n_box[2] = 20'd0;
+		n_box[3] = 20'd0;
+		n_box[4] = 20'd0;
+		n_box[5] = 20'd0;
+		n_box[6] = 20'd0;
+		n_box[7] = 20'd0;
+
+		n_mem[ 62] = box[0];
+		n_mem[ 63] = box[1];
+		n_mem[126] = box[4];
+		n_mem[127] = box[5];
 	end
-endfunction
+endtask 
 
 //control && read
 always @(*) begin
 	n_o_addr = o_addr;
-	for(i = 0; i < 256; i = i+1)n_mem[i] = mem[i];
+	for(i = 0; i < 128; i = i+1)n_mem[i] = mem[i];
+	for(i = 0; i <   8; i = i+1)n_box[i] = box[i];
 
 	n_o_busy = 1'd1;
 
@@ -225,76 +253,203 @@ always @(*) begin
 			n_o_busy = i_ready;
 
 			n_o_addr = 12'd0;
-			for(i = 0; i < 256; i = i+1)n_mem[i] = 20'd0;
+			for(i = 0; i < 128; i = i+1)n_mem[i] = 20'd0;
+			for(i = 0; i <   8; i = i+1)n_box[i] = 20'd0;
 		end
 
 		INIT : begin
-			n_state = (data_addr == 8'd65) ? INIT_RUN : INIT;
+			n_state = (o_addr == 12'd2) ? INIT_RUN : INIT;
+			case (o_addr)
+				12'd0 : n_o_addr = 12'd64;
 
-			n_o_addr = nxt_init_addr(o_addr);
-			n_mem[data_addr + 12'd64] = i_data;
-			
+				12'd64 : begin
+					n_o_addr = 12'd128;
+					n_mem[64] = i_data;
+				end
+
+				12'd128 : begin
+					n_o_addr = 12'd1;
+					n_box[1] = i_data;
+				end
+
+				12'd1 : begin
+					n_o_addr = 12'd65;
+					n_box[5] = i_data;
+				end
+
+				12'd65 : begin
+					n_o_addr = 12'd129;
+					n_mem[65] = i_data;
+				end
+
+				12'd129 : begin
+					n_o_addr = 12'd2;
+					n_box[2] = i_data;
+				end
+
+				12'd2 : begin
+					n_o_addr = 12'd66;
+					n_box[6] = i_data;
+				end
+				default : n_o_addr = 12'dx;
+			endcase
 		end
 
 		INIT_RUN : begin
-			n_state = (o_addr == 12'd191) ? WAIT : INIT_RUN;
+			n_state = (o_addr == 12'd192) ? WAIT : INIT_RUN;
 
-			n_o_addr = nxt_init_addr(o_addr);
-			n_mem[data_addr + 12'd64] = i_data;
+			case (step_counter)
+				4'd0 : begin
+					n_o_addr = {6'b000010, o_addr[5:0]};
+					n_mem[{1'b1, conv_counter + 5'd1, 1'b0}] = i_data;
+				end
+
+				4'd1 : begin
+					n_o_addr = {6'd0, o_addr[5:0] + 6'd1};
+					n_box[3] = i_data;
+				end
+
+				4'd2 : begin
+					n_o_addr = o_addr;
+					n_box[7] = i_data;
+				end
+
+				4'd3 : begin
+					n_o_addr = {6'b000001, o_addr[5:0]};
+					box_shift;
+				end
+
+				4'd4 : begin
+					n_o_addr = {6'b000010, o_addr[5:0]};
+					n_mem[{1'b1, conv_counter + 5'd1, 1'b1}] = i_data;
+				end
+
+				4'd5 : begin
+					n_o_addr = o_addr == 12'd191 ? 12'd192 : {6'd0, o_addr[5:0] + 6'd1};
+					n_box[3] = i_data; 
+				end
+
+				4'd6 : begin
+					n_o_addr = o_addr;
+					n_box[7] = i_data; 
+				end
+
+				4'd7 : begin
+					n_o_addr = o_addr;
+					box_shift; 
+				end
+
+				4'd11 : n_o_addr = {6'b000001, o_addr[5:0]};
+			endcase
 		end
 
 		WAIT : begin
 			n_state = WAIT;
+			if(step_counter == 4'd3 || step_counter == 4'd7)box_shift;
 
 			if(o_addr) begin
-				n_mem[255] = (data_addr[5:0] == 6'd63) ? i_data : mem[255];
-				
-				if(conv_counter == 5'd31 && step_counter == 4'd6) begin
-					n_state  = (o_addr == 12'd4032) ? LAST_SHIFT : SHIFT; 
-					n_o_addr = (o_addr == 12'd4032) ? 12'd4033   : nxt_addr(o_addr);
-				end
+				if(conv_counter == 5'd31 && step_counter == 4'd5) 
+					n_state  = (o_addr[11:6] == 6'b111111) ? LAST_SHIFT : SHIFT; 
 			end else begin
-				n_mem[191] = (data_addr[5:0] == 6'd63) ? i_data : mem[191];
-
-				if(conv_counter == 5'd31 && step_counter == 4'd7) begin
+				if(conv_counter == 5'd31 && step_counter == 4'd7) 
 					n_state  = IDLE; 
-					n_o_addr = 12'd0;
-				end
 			end 
 		end
 
 		SHIFT : begin
-			n_state = RUN;
+			n_state = SHIFT;
 
-			n_o_addr = nxt_addr(o_addr);
-			for(i =   0; i < 128; i = i+1)n_mem[i] = mem[i+128];
-			n_mem[128] = i_data;
-			for(i = 129; i < 256; i = i+1)n_mem[i] = 20'd0;
+			case (step_counter)
+				4'd6 : n_o_addr = {o_addr[11:6], 6'd1};
+
+				4'd7 : begin
+					box_change(i_data);
+					n_o_addr = {o_addr[11:7] + 5'd1, 1'b0, 6'd0};
+				end
+
+				4'd8 : begin
+					n_box[2] = i_data;
+					n_o_addr = {o_addr[11:6], 6'd1};
+				end
+
+				4'd9 : begin
+					n_box[5] = i_data;
+					n_o_addr = {o_addr[11:7] - 5'd1, 1'b1, 6'd2};
+				end
+
+				4'd10 : begin
+					n_box[6] = i_data;
+					n_state = RUN;
+				end
+			endcase
 		end
 
 		RUN : begin
-			n_state = (o_addr[6:0] == 7'd63) ? WAIT : RUN;
+			n_state = o_addr[5:0] ? RUN : WAIT;
 
-			n_o_addr = nxt_addr(o_addr);
-			n_mem[{1'b1, ~data_addr[6], data_addr[5:0]}] = i_data;
+			case (step_counter)
+				4'd11 : n_o_addr = {o_addr[11:7] + 5'd1, 1'b0, o_addr[5:0]};
+
+				4'd0 : begin
+					n_o_addr = {o_addr[11:7] - 5'd1, 1'b1, o_addr[5:0] + 6'd1};
+					n_box[3] = i_data;
+				end
+
+				4'd1 : n_box[7] = i_data;
+				
+				4'd3 : begin
+					box_shift;
+					n_o_addr = {o_addr[11:7] + 5'd1, 1'b0, o_addr[5:0]};
+				end 
+
+				4'd4 : begin
+					n_box[3] = i_data;
+					n_o_addr = o_addr[5:0] == 6'd63 ? {o_addr[11:7], 1'b1, 6'b0} : 
+								{o_addr[11:7] - 5'd1, 1'b1, o_addr[5:0] + 6'd1};
+				end 
+
+				4'd5 : n_box[7] = i_data;
+				4'd7 : box_shift;
+
+			endcase
 		end
 
 		LAST_SHIFT : begin
-			n_state = LAST_RUN;
+			n_state = LAST_SHIFT;
 
-			n_o_addr = 12'd4034;
-			for(i =   0; i < 128; i = i+1)n_mem[i] = mem[i+128];
-			n_mem[128] = i_data;
-			for(i = 129; i < 256; i = i+1)n_mem[i] = 20'd0;
+			case (step_counter)
+				4'd6 : n_o_addr = 12'd4033;
+				
+				4'd7 : begin
+					box_change(i_data);
+					n_o_addr = 12'd4034;
+				end
+
+				4'd8 : begin
+					n_box[2] = i_data;
+					n_state = LAST_RUN;
+				end
+			endcase
 		end
 
 		LAST_RUN : begin
-			n_state = (o_addr[5:0] == 6'd63) ? WAIT : LAST_RUN;
+			n_state = (o_addr[5:0]) ? LAST_RUN : WAIT;
 
-			n_o_addr = o_addr + 12'd1;
-			n_mem[{2'b10, data_addr[5:0]}] = i_data;
-		end
-		
+			case (step_counter)
+				4'd0 : begin
+					n_box[3] = i_data;
+					n_o_addr = {6'b111111, o_addr[5:0] + 6'd1};
+				end 
+
+				4'd3 : box_shift;
+				4'd4 : begin
+					n_box[3] = i_data;
+					n_o_addr = (o_addr[5:0] == 6'b111111) ? 12'd0 : {6'b111111, o_addr[5:0] + 6'd1};
+				end 
+				4'd7 : box_shift;
+
+			endcase
+		end	
 	endcase
 end
 
@@ -321,14 +476,14 @@ always @(posedge clk or posedge reset) begin
 	if(reset) begin
 		//control
 		state <= IDLE;
-		data_addr <= 8'd0;
 		conv_counter <= 5'd0;
 		step_counter <= 4'd0; 
 		//IO
 		o_busy <= 1'd0;
 		o_addr <= 12'd0;
 		//mem
-		for(i = 0; i < 256; i = i+1)mem[i] <= 20'd0;
+		for(i = 0; i < 128; i = i+1)mem[i] <= 20'd0;
+		for(i = 0; i <   8; i = i+1)box[i] <= 20'd0;
 		//kernal
 		k_element <= 180'd0;
 		k_valid <= 1'd0;
@@ -336,14 +491,14 @@ always @(posedge clk or posedge reset) begin
 	end else begin
 		//control
 		state <= n_state;
-		data_addr <= o_addr[7:0];
 		conv_counter <= n_conv_counter;
 		step_counter <= n_step_counter;
 		//IO
 		o_busy <= n_o_busy;
 		o_addr <= n_o_addr;
 		//mem
-		for(i = 0; i < 256; i = i+1)mem[i] <= n_mem[i];
+		for(i = 0; i < 128; i = i+1)mem[i] <= n_mem[i];
+		for(i = 0; i <   8; i = i+1)box[i] <= n_box[i];
 		//kernal
 		k_element <= n_k_element;
 		k_valid <= n_k_valid;
