@@ -3,7 +3,7 @@
 Report : area
 Design : CONV
 Version: N-2017.09-SP2
-Date   : Sat Jun  8 03:14:53 2019
+Date   : Thu Jun 13 14:52:04 2019
 ****************************************
 
 Library(s) Used:
@@ -11,20 +11,20 @@ Library(s) Used:
     typical (File: /home/raid7_2/course/cvsd/CBDK_IC_Contest/CIC/SynopsysDC/db/typical.db)
 
 Number of ports:                          161
-Number of nets:                         38927
-Number of cells:                        32981
-Number of combinational cells:          26992
-Number of sequential cells:              5988
+Number of nets:                         28200
+Number of cells:                        23903
+Number of combinational cells:          20318
+Number of sequential cells:              3584
 Number of macros/black boxes:               0
-Number of buf/inv:                       3654
-Number of references:                      98
+Number of buf/inv:                       3041
+Number of references:                      99
 
-Combinational area:             313153.327234
-Buf/Inv area:                    26635.600901
-Noncombinational area:          197083.410320
+Combinational area:             233898.327429
+Buf/Inv area:                    20691.306054
+Noncombinational area:          119043.750462
 Macro/Black Box area:                0.000000
-Net Interconnect area:         4767537.563751
+Net Interconnect area:         3367950.360107
 
-Total cell area:                510236.737554
-Total area:                    5277774.301306
+Total cell area:                352942.077890
+Total area:                    3720892.437998
 1

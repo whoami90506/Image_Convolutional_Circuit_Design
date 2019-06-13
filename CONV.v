@@ -2,7 +2,7 @@
 module  CONV(
 	input		clk,
 	input		reset,
-	output		busy,	
+	output	reg	busy,	
 	input		ready,	
 			
 	output	[11:0]	iaddr,
@@ -22,24 +22,37 @@ module  CONV(
 //top
 reg [19:0] i_data;
 reg _ready;
+reg n_busy;
+
+reg  busy_buf;
+wire n_busy_buf;
 
 //submodule
 wire valid;
 wire [18:0] data;
 wire busy_layer0, busy_layer12;
 
-assign busy = busy_layer0 | busy_layer12;
 assign crd = 1'd0;
 assign caddr_rd = 12'd0;
+assign n_busy_buf = busy_layer0 | busy_layer12 | _ready;
+
+always @(*) begin
+	if(busy) n_busy = busy_layer0 | busy_layer12 | busy_buf ? 1'b1 : 1'b0;
+	else n_busy = _ready;
+end
 
 
 always @(posedge clk or posedge reset) begin
 	if(reset) begin 
 		i_data <= 20'd0;
 		_ready <= 1'd0;
+		busy <= 1'b0;
+		busy_buf <= 1'b0;
 	end else begin
 		i_data <= idata;
 		_ready <= ready;
+		busy <= n_busy;
+		busy_buf <= n_busy_buf;
 	end
 end
 

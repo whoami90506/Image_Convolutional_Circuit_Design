@@ -1,6 +1,6 @@
 # operating conditions and boundary conditions #
 
-set cycle 2.35
+set cycle 2.5
 set t_in  [expr $cycle/2]
 
 create_clock -name clk  -period $cycle   [get_ports  clk] 

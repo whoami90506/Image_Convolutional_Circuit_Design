@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-`define CYCLE      2.37         	  // Modify your clock period here
+`define CYCLE      2.55        	  // Modify your clock period here
 `define End_CYCLE  13000              // Modify cycle times once your design need more cycle times!
 
 `define PAT        "./dat_grad/cnn_sti.dat"                 // Modify your "dat" directory path

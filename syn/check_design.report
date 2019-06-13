@@ -2,7 +2,7 @@
 ****************************************
 check_design summary:
 Version:     N-2017.09-SP2
-Date:        Sat Jun  8 03:01:09 2019
+Date:        Thu Jun 13 14:40:10 2019
 ****************************************
 
                    Name                                            Total
@@ -12,30 +12,28 @@ Inputs/Outputs                                                     45
     Shorted outputs (LINT-31)                                      12
     Constant outputs (LINT-52)                                     13
 
-Cells                                                              22
-    Cells do not drive (LINT-1)                                    22
+Cells                                                              20
+    Cells do not drive (LINT-1)                                    20
 --------------------------------------------------------------------------------
 
-Warning: In design 'layer0', cell 'C64354' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64356' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64568' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64570' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64792' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64793' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64794' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64805' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64806' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64807' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64814' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64815' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C64816' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'B_1386' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C65016' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C65019' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C65025' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C65028' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C65041' does not drive any nets. (LINT-1)
-Warning: In design 'layer0', cell 'C65044' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175016' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175023' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175187' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175194' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175342' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175513' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175514' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175553' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175554' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175561' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175693' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175700' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175867' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C175874' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C176006' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C176013' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C176160' does not drive any nets. (LINT-1)
+Warning: In design 'layer0', cell 'C176163' does not drive any nets. (LINT-1)
 Warning: In design 'layer12', cell 'C1109' does not drive any nets. (LINT-1)
 Warning: In design 'layer12', cell 'C1112' does not drive any nets. (LINT-1)
 Warning: In design 'CONV', port 'cdata_rd[19]' is not connected to any nets. (LINT-28)
