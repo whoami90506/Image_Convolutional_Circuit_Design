@@ -7,7 +7,7 @@ Report : power
         -analysis_effort low
 Design : CONV
 Version: N-2017.09-SP2
-Date   : Sat Jun  8 03:14:57 2019
+Date   : Thu Jun 13 14:52:07 2019
 ****************************************
 
 
@@ -33,12 +33,12 @@ Power-specific unit information :
     Leakage Power Units = 1pW
 
 
-  Cell Internal Power  =  70.8289 mW   (89%)
-  Net Switching Power  =   8.7902 mW   (11%)
+  Cell Internal Power  =  40.9631 mW   (88%)
+  Net Switching Power  =   5.4486 mW   (12%)
                          ---------
-Total Dynamic Power    =  79.6191 mW  (100%)
+Total Dynamic Power    =  46.4117 mW  (100%)
 
-Cell Leakage Power     =  95.1667 uW
+Cell Leakage Power     =  62.4317 uW
 
 
                  Internal         Switching           Leakage            Total
@@ -48,9 +48,9 @@ io_pad             0.0000            0.0000            0.0000            0.0000 
 memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
-register          68.2823            0.5607        5.2445e+07           68.8919  (  86.42%)
+register          39.1202            0.4568        3.1367e+07           39.6074  (  85.22%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational      2.5489            8.2289        4.2721e+07           10.8211  (  13.58%)
+combinational      1.8441            4.9918        3.1065e+07            6.8670  (  14.78%)
 --------------------------------------------------------------------------------------------------
-Total             70.8312 mW         8.7897 mW     9.5167e+07 pW        79.7130 mW
+Total             40.9643 mW         5.4487 mW     6.2432e+07 pW        46.4744 mW
 1
