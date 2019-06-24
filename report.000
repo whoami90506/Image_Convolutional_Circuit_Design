@@ -1,6 +1,6 @@
 學號:B05901064, B05901065 
 
-通過gate-level simulation之cell area report： 352942.077890
-通過gate-level simulation之clock cycle time (ns)： 2.55
-通過post-layout simulation之clock cycle time (ns)：
+通過gate-level simulation之cell area report： 319988.755496
+通過gate-level simulation之clock cycle time (ns)： 36927.461
+通過post-layout simulation之clock cycle time (ns)：80988.623
 
